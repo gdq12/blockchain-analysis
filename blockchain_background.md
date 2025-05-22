@@ -1,3 +1,138 @@
+## Ethreum platform Background
+
+* Ethreum protocol powered platform for multiple decentralized apps and blockchains.
+
+* blockchain def accoding to [Ethereum website](https://ethereum.org/en/what-is-ethereum/)
+
+    > A blockchain is a database of transactions that is updated and shared across many computers in a network. Every time a new set of transactions is added, its called a “block” - hence the name blockchain. Public blockchains like Ethereum allow anyone to add, but not remove, data. If someone wanted to alter any of the information or cheat the system, they’d need to do so on the majority of computers on the network. That is a lot! This makes decentralized blockchains like Ethereum highly secure.
+
+* possible capabilities of Ethereum
+
+    + banking 
+
+    + open-internet: eveyone controls their own assets and identity as opposed to a corporation
+
+    + peer-to-peer network: no intermediate entity for asset transfer, coordination or agreement making 
+
+    + censorship-resistent: decentralization makes it impossible for a corporate entity from hindering trascational activity 
+
+    + commerce guarantees: exchange ot products occur only when agreed payment is met, developers are assured rules of transaction will remain unchanged 
+
+    + composable products: app development is interdependent on the building blocks they are build from, meaning up/down chain apps must remain for the app "ecosystem" to stay in place 
+
+* Ethereum advantages over Bitcoin
+
+    + Bitcoin can only carry out trasactions and send simple messages, but Ethereum can do that plus allow user to write up general contracts or program. 
+
+    + Ethereum is more like a marketplace of financial services, games, social networks and other apps.
+
+### Benefits of using Ethereum
+
+* cheaper and faster cross border payments: uses stablecoins, novel type of cryptocurrency, which relies on a more stable asset (aka american dollar) as the basis for its value. The cross border transaction is not limited to amount and usually take mere minutes compared to days/weeks for typical financial institutions, and at a much cheaper service fee. 
+
+* great financial alternative at times of crisis: Ethereum is a great alternative in for example war torn regions where there is political oppression and bank access is quite limited. Also stablecoins don't have as much value fluctuation like local currecy and are less susceptipal to hyperinflation.
+
+* Since about 2021 more local creators have been using the platform, leading to a 3.5 billion in their growth 
+
+* reward exchanges have shapes the gaming industry, players are able to cash in their rewards for playing games through Ethereum where as opposed to the black market where there is much less security and the likelihood to receive lower value for their game tokens 
+
+### How is Ethereum decentralized
+
+* it isn't run by a single organization 
+
+* the blockchain are made of Nodes, any computer running the ethereum protocol and able to participate in the secure network by having a native token (ETH). Access wihtout permission is granted when a node has a minimum 32 ETH.
+
+* source code is also community supported, changed, updated in multiple programming languages.
+
+### Ethereum Components
+
+* Cryptocurrency are digital tokens secured using a blockchain. 
+
+    + Bitcoin was the first cryptocurrency, which is used to transfer value between two parties without having to trust a middleman. Only entity to trust is the Bitcoin code itself since it is open and freely available. 
+    
+    + Security of data and assets are garaunteed by cryptography, where only the content of communnication can be read for those intended for.
+
+    * Ethereum crptocurrency is ether (ETH), which is used to pay for the computation power it takes to run apps and organizations on the blockchain.
+
+* Ether (ETH), Ethereum's cryptocurrency 
+
+    + need some currency to pay for the computation power taken to run the Ethereum virtual machines to execute all protocol 
+
+    + its a pure digital currency that can be sent precisely to any staker within the secure network. 
+
+    + during The Merge upgrade on Sept 15 2022, the blockchain transitioned from a proof-of-work (calc value by computation power) to a proof-of-stake (user show proof of value of its cryptocurrency as proof of stake in the network to participate in transactions) --> this led to a 99.95% reduction in energy consumption, making it a low-carbon blockchain while maintaining security and scalability.
+
+    + other benefits: secured by cryptography, peer-topeer payment, no centralized control, open to anyone, available as a flexible amount (its divisible by up to 18 decimal places) 
+
+    + ETH validators: like record-keepers of the system, users randomly selected to propose a transaction, they are rewarded a small comission for carrying this out, if fail to carry out the validating duties then they loose out in the stake/ETH they placed. The threat of loosing ETH due to staking keeps the system honest.
+
+* Smart contracts 
+
+    + computer programs within the blockchain that act as building blocks for decentralized apps and organizations. They are triggered by transactions of other users. 
+
+    + their advantage is once they are published, they remain operational so long as the blockchain exists and can't be ammended or completely removed (not even by the author).
+
+    + these contracts can also be used by any entity, no exclusion or discrimination. 
+
+    + examples of smart contracts: lending apps, decentralized trading exchanges, insurance, quadratic funding, social networks, NFTs.
+
+### Types of Tokens
+
+* they are assets that users can use to trade as well 
+
+* list of token types: 
+
+    + stablecoins: least volatile of Ethereum tokens, they mirror the value of traditional currency 
+
+    + decentralized finance (DeFi): financial system for Ethereum tokens 
+
+    + Non-fungible tokens (NFTs)/collectible tokens: they represent ownership of items, like collectible game items, digitial art, or other unique assets
+
+    + decentralized autonomous organizations (DAOs): internet communities governed by token holders 
+
+    + governance tokens: they rep voting power in decentralized organizations 
+
+    + shit coins: token easily created, may not be as credible and actually created by malicious parties 
+
+### Ethereum wallets 
+
+* they are applications that give control over user account, consists of everything needed to prove identity and handle assets.
+
+* it is just a "platform" to interact with Ethereum account, can switch wallet apps anytime
+
+* wallet providers dont have access to the funds, they are just a portal tool for access 
+
+* Ethereum account is actually a pair of keys: 1 key is used to create the address (like inbox) used to identify digital assets and the other is a secret key used for verification, trasaction approval etc.
+
+* wallet types: 
+
+    + physical hardware wallet: devices that keep crypto offline --> very secure 
+
+    + mobile applications: make funds accessible anywhere 
+
+    + browser wallets: web app that permits users to interact with their account directly in the browser 
+
+    + browser extension wallets: downloadable extensions for the web browser 
+
+    + desktop application: to manage funds from a local machine 
+
+### Smart Contracts 
+
+* computer prgrams in the blockchain that follwo an if-then logic that are guaraunteed to be executed according to rules defined in the code, which cannot be changed once created. 
+
+* a good metaphor example of this concept is the vending machine: 
+
+    + specific inputs guarantee a predetermined output.
+
+    + select product --> vending machine states price --> user inputs money --> machine verifies amount is correct --> machine provides the requested item 
+
+* there is no need for a human to approve a transaction when conditions are met. Once all conditions are met in the code, the transaction is immediately carried out 
+
+* the outcome of smart contracts are predictable because they are carried out only when the conditions are precisely met by the code and no need for multiple ppl to evaluate the outcome for and come to different conclusions 
+
+* very useful for audits and tracking since they are used and saved in a public blockchain
+
+* there is privacy protection since Ethereum is a pseudonymous network where transactions are tied to unique cryptographic address and not to a real person address 
 
 
 ## Helpful Links
@@ -10,18 +145,18 @@
 
 * [datacamp](https://www.datacamp.com/blog/python-bitcoin) bitcoin time-series analysis in python 
 
-* [Etherium](https://ethereum.org/en/) blockchain website, good source for backgroun and intro info 
+* [Ethereum](https://ethereum.org/en/) blockchain website, good source for backgroun and intro info 
 
 * Allen Page's [talk](https://www.youtube.com/watch?v=_IX6bhE6Qu4) on cryptocurrencies in BigQuery when it was first introduced
 
-* [article](https://cloud.google.com/blog/products/data-analytics/ethereum-bigquery-public-dataset-smart-contract-analytics): Etherium in BigQuery: a Public Dataset for smart contract analytics
+* [article](https://cloud.google.com/blog/products/data-analytics/ethereum-bigquery-public-dataset-smart-contract-analytics): Ethereum in BigQuery: a Public Dataset for smart contract analytics
 
-* [article](https://medium.com/google-cloud/full-relational-diagram-for-ethereum-public-data-on-google-bigquery-2825fdf0fb0b) on the relationstional diagram schema of the crypto_etherium data 
+* [article](https://medium.com/google-cloud/full-relational-diagram-for-ethereum-public-data-on-google-bigquery-2825fdf0fb0b) on the relationstional diagram schema of the crypto_Ethereum data 
 
-* [article](https://cloud.google.com/blog/products/data-analytics/ethereum-bigquery-how-we-built-dataset) on how the Etherium public dataset was built in BigQuery 
+* [article](https://cloud.google.com/blog/products/data-analytics/ethereum-bigquery-how-we-built-dataset) on how the Ethereum public dataset was built in BigQuery 
 
-* marketplace page on [Etherium Crytocurrency](https://console.cloud.google.com/marketplace/product/ethereum/crypto-ethereum-blockchain?inv=1&invt=Abx3vA&project=pipeline-analysis-455005) dataset in BigQuery 
+* marketplace page on [Ethereum Crytocurrency](https://console.cloud.google.com/marketplace/product/ethereum/crypto-ethereum-blockchain?inv=1&invt=Abx3vA&project=pipeline-analysis-455005) dataset in BigQuery 
 
-* marketplace page on [Etherium Blockchain](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-ethereum-mainnet-us?inv=1&invt=Abx3vg&project=pipeline-analysis-455005) dataset in BigQuery 
+* marketplace page on [Ethereum Blockchain](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-ethereum-mainnet-us?inv=1&invt=Abx3vg&project=pipeline-analysis-455005) dataset in BigQuery 
 
 * [article1](https://expertbeacon.com/ethereum-and-bitcoin-data-at-your-fingertips-analyzing-crypto-activity-with-google-bigquery/) and [article2](https://bitquery.io/blog/querying-bigquery-blockchain-dataset) on analyzing cryptodata in BigQuery 
