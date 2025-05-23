@@ -134,6 +134,44 @@
 
 * there is privacy protection since Ethereum is a pseudonymous network where transactions are tied to unique cryptographic address and not to a real person address 
 
+## Blockchain KPI metrics 
+
+## Transaction metrics
+
+* transaction volume: number of trasactions processed by the blockchain within a period of time. Indicates active use and reflect popularity and adoption.
+
+* transaction value: value of assets moved acorss the blockchain in a given period of time. This is indicative of significant economic activity.
+
+* active addresses: unique count of address involved in trasactions during a given period of time. This is a user engagement metric.
+
+* total addresses: number of unique addresses in the network irrespective of their activity. This provides info on the networks growth and user base. Another metric that demonstrates popularity and adoption. 
+
+## Network Health etrics
+
+* hash rate: measures total computational power dedicated to mining and securing the blockchain. It is crucial for proof-of-work (POW)
+ for it represents the networks security level. A higher rate means that the network is more secure and resistant to attacks and more computational resources are required to compromise the network.
+
+* block time: avg amt of time it take for a new block to be added to the chain. This metric influences transaction confirmation times, with shorter avg times reflecting quicker confirmations.
+
+* block size: avg size of blocks in blockchain. Larger block sizes indicate a given block can handle more transactions, which leads to increase throughput with the the need of more storage and processing power from the node. 
+
+* network fees: cost paid by users to have transactions processed and confirmed. Higher fees indicate network congestion, which goes hand in hand with higher demand and transaction processing. Higher fees also reflect users willingness to pay for transaction priority.
+
+### Value metrics
+
+* NVT (network value to transactions): a ratio calculated as market capitilization divided by transaction volume. It the same as the price-to-earning (P/E) ratio in finance. A lower value reflects the networks value is well-supported by transaction activity.
+
+    + market capitilization/cap: current price of cryptocurrency x totla num of coins in circulation.
+
+    + market capitilization gives a sense of the cryptocurrency market, whether it is over or undervalued.
+
+## Decentralization metrics
+
+* DTPS (decentralized transactions per second): its the measurement of transaction speed with level of decentralization, factoring in throughput and decentralization. This is a good metric to compare different blockchains.
+
+* gini coefficient: measure of inequality in the distribution of resources (like wealth or token holding). A lower coefficient  reveals more even distribution, while the other end indicates greater inequality.
+
+* nakamoto coefficient: num of entities required to collude/disrupt the networks consensus mechanism. This evaluates how many entities control the networks consensus. Higher coefficient indicates a more decentralized network.
 
 ## Helpful Links
 
@@ -141,7 +179,9 @@
 
 * [article](https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them?hl=en) on cryptocurrency data loaded to BigQuery and how to analyze them 
 
-* article on [KPI analysis](https://www.paulsimroth.at/blog/kpis-on-the-blockchain-in-depth-guide)
+* article on [blockchain KPI analysis](https://www.paulsimroth.at/blog/kpis-on-the-blockchain-in-depth-guide)
+
+* article on [crypto KPI analysis](https://cointelegraph.com/learn/articles/the-most-common-crypto-metrics-a-beginners-guide)
 
 * [datacamp](https://www.datacamp.com/blog/python-bitcoin) bitcoin time-series analysis in python 
 
