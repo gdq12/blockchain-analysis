@@ -175,17 +175,31 @@
 
 ## Helpful Links
 
+### Blockchain centric
+
 * Bigquery overview of its [blockchain analytics](https://cloud.google.com/blockchain-analytics/docs/overview)
 
-* [article](https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them?hl=en) on cryptocurrency data loaded to BigQuery and how to analyze them 
-
 * article on [blockchain KPI analysis](https://www.paulsimroth.at/blog/kpis-on-the-blockchain-in-depth-guide)
+
+* [Ethereum](https://ethereum.org/en/) blockchain website, good source for backgroun and intro info 
+
+* marketplace page on [Ethereum Blockchain](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-ethereum-mainnet-us?inv=1&invt=Abx3vg&project=pipeline-analysis-455005) dataset in BigQuery 
+
+* [post](https://cloud.google.com/blog/products/data-analytics/data-for-11-more-blockchains-in-bigquery-public-datasets) on blockchain public dataset into to bigquery, entrprise supported
+
+* [blockchain documentation](https://cloud.google.com/blockchain-analytics/docs/example-ethereum) with example queries provided by google.
+
+* [BigQuery UDFs](https://cloud.google.com/blockchain-analytics/docs/uint256) for making more accurate calculations.
+
+* [Etherscan.io](https://etherscan.io/), place to look up the name tags for address, contract and tokens.
+
+### Cryptocurrency centric
+
+* [article](https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them?hl=en) on cryptocurrency data loaded to BigQuery and how to analyze them 
 
 * article on [crypto KPI analysis](https://cointelegraph.com/learn/articles/the-most-common-crypto-metrics-a-beginners-guide)
 
 * [datacamp](https://www.datacamp.com/blog/python-bitcoin) bitcoin time-series analysis in python 
-
-* [Ethereum](https://ethereum.org/en/) blockchain website, good source for backgroun and intro info 
 
 * Allen Page's [talk](https://www.youtube.com/watch?v=_IX6bhE6Qu4) on cryptocurrencies in BigQuery when it was first introduced
 
@@ -196,7 +210,5 @@
 * [article](https://cloud.google.com/blog/products/data-analytics/ethereum-bigquery-how-we-built-dataset) on how the Ethereum public dataset was built in BigQuery 
 
 * marketplace page on [Ethereum Crytocurrency](https://console.cloud.google.com/marketplace/product/ethereum/crypto-ethereum-blockchain?inv=1&invt=Abx3vA&project=pipeline-analysis-455005) dataset in BigQuery 
-
-* marketplace page on [Ethereum Blockchain](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-ethereum-mainnet-us?inv=1&invt=Abx3vg&project=pipeline-analysis-455005) dataset in BigQuery 
 
 * [article1](https://expertbeacon.com/ethereum-and-bitcoin-data-at-your-fingertips-analyzing-crypto-activity-with-google-bigquery/) and [article2](https://bitquery.io/blog/querying-bigquery-blockchain-dataset) on analyzing cryptodata in BigQuery 
