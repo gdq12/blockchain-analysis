@@ -130,6 +130,7 @@ celerybeat.pid
 # Environments
 **.env
 **devcontainer.env
+**blockchain-analysis*.json**
 .venv
 env/
 venv/
