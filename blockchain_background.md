@@ -173,6 +173,90 @@
 
 * nakamoto coefficient: num of entities required to collude/disrupt the networks consensus mechanism. This evaluates how many entities control the networks consensus. Higher coefficient indicates a more decentralized network.
 
+## Good to knows for queriying block chain data 
+
+* slots per day
+
+    + since `The Merge` on sept16 2022, there is a max posibility to add 7200 clots per day to the blockchain 
+
+    + a single block occupies a slot 
+
+    + number of slot added per day can be calculated from `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.blocks`
+
+* lossless column
+
+    + they are numerical dimensions with `_lossless` suffix in its name.
+
+    + there are some values that need uint256 numeric precision, which BigQuery mostly can't provide --> so instead these values are provided as numeric and string (`_lossless`) format 
+
+    + BigQuery provides out of the box UDFs to handle the lossless ones: `bqutil.fn.bignumber_add`, `bqutil.fn.bignumber_sub`, `bqutil.fn.bignumber_mul`, `bqutil.fn.bignumber_div`, `bqutil.fn.bignumber_sum`, `bqutil.fn.bignumber_avg`
+
+* stake withdrawals 
+
+    + values can be found in `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.blocks.withdrawals`
+
+    + this is where stakers can withdraw their locked-up ETH 
+
+    + This approach to staking withdrawals avoids requiring stakers to manually submit a transaction requesting a particular amount of ETH to be withdrawn. This means there is no gas (transaction fee) required, and withdrawals also do not compete for existing execution layer block space.
+
+* EIP-1559
+
+    + an ethereum improvement proposal to reduce gas feed and make the currency deflationary 
+
+    + previously trasaction based was based on user pitching the best price to minors per block, those that pitched the highest price had the transaction processed the fatest and the reverse is true for the lowest bids. This meant that that the market fluctuated a lot in terms of best vs worst bids and led to bad user experience. Aka demand market.
+
+    + the aim of the proposal is to make better predictions of the base fees and to have better user experience for the blockchain.
+
+    +  at a high level overview, this was able to achieve deflation by having blocksize increase rather than base fees increasing so much and by users setting a maximum fee they were willing to pay
+
+    + the `London Hard Fork` implementation can be seen starting on block number `12965000`, before this base fees are burned and miners only earn priority fee.
+
+    + calculation of priority fee: `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.effective_gas_price` - `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.blocks.base_fee_per_gas`
+
+* USDC stable coins 
+    
+    + fiat-backed stablecoin, meaning it is backed by reserve assets in the traditional financial system, such as cash, cash equivalents, or securities. In the case of USDC, it is designed to be pegged to the US dollar and redeemable 1:1 for US dollars.
+
+    + held within US regulatory financail institutions 
+
+    + they are run in multiple blockchains 
+
+    + contracts that issues USDC stable tokens: `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.to_address` = `0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48`
+
+    + when USDC burned vs minted:
+
+        - burnt: `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.input` like `0x42966c68%`
+
+        - minted: `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.input` like `0x40c10f19%`
+
+    + to determine which accounts/wallets have the USDC balances: `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers` where `token` = `0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48`
+
+* null address = `0x0000000000000000000000000000000000000000`
+
+* BAYC tokens are `0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d`
+
+* `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers.address` is actually the token ID
+
+* `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.accounts.is_contract` true/false is determine if record is a wallet/account or a contract 
+
+* types of addresses:
+
+    + externally owned account(EOA)
+
+    + smart contract address 
+
+    + miner address 
+
+    + token contract address 
+
+    + staking validator address 
+
+    + liquidity pool address 
+
+    + multisig wallet address 
+
+    + burn address (`0x0000000000000000000000000000000000000000`)
+
 ## Helpful Links
 
 ### Blockchain centric
@@ -192,6 +276,10 @@
 * [BigQuery UDFs](https://cloud.google.com/blockchain-analytics/docs/uint256) for making more accurate calculations.
 
 * [Etherscan.io](https://etherscan.io/), place to look up the name tags for address, contract and tokens.
+
+* [roadmap article](https://ethereum.org/en/roadmap/merge/) about `The Merge`, occuring `sept 16 2022`. 
+
+* [YT video on EIP-1559](https://www.youtube.com/watch?v=MGemhK9t44Q), really good explanation on how this release brought lower fluctuation in transaction fees.
 
 ### Cryptocurrency centric
 
