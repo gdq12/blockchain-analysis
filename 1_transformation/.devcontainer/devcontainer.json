@@ -2,7 +2,7 @@
 	"name": "transform-dbt",
     "image": "blockchain-analysis-transform-dbt:latest",
 	"mounts": [
-		"source=${localEnv:SCRIPTS_REPO},target=/workspaces/1_transformation/scripts,type=bind,consistency=cached"
+		"source=${localEnv:SCRIPTS_REPO},target=/workspaces/blockchain-analysis/1_transformation/scripts,type=bind,consistency=cached"
 	],
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

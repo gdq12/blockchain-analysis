@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: receipts
+    description:
+
+    database: "{{ env_var('BQ_PUBLIC_DB') }}"
+    schema: "{{ env_var('BQ_PUBLIC_SCHEMA') }} "
+
+    tables:
+      - name: receipts

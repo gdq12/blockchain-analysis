@@ -281,6 +281,14 @@
 
 * [YT video on EIP-1559](https://www.youtube.com/watch?v=MGemhK9t44Q), really good explanation on how this release brought lower fluctuation in transaction fees.
 
+### Ethereum Trace
+
+* [Geth (Go-Ethereum) Tracing Documentation](https://geth.ethereum.org/docs/developers/evm-tracing/basic-traces), most comprehensive source for understanding how traces are generated, what fields are included (like action, result, trace_address), and how to interpret them.
+
+* [Built-in Tracers in Geth](https://geth.ethereum.org/docs/developers/evm-tracing/built-in-tracers), Explains the different types of tracers available in Geth (e.g., callTracer, prestateTracer), and how to configure them for different levels of detail.
+
+* [Ethereum’s Merkle Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/), While not directly about traces, this is essential background for understanding how Ethereum stores and verifies state — which is relevant when interpreting trace outputs.
+
 ### Cryptocurrency centric
 
 * [article](https://cloud.google.com/blog/products/data-analytics/introducing-six-new-cryptocurrencies-in-bigquery-public-datasets-and-how-to-analyze-them?hl=en) on cryptocurrency data loaded to BigQuery and how to analyze them 
