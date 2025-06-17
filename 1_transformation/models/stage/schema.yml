@@ -1,0 +1,245 @@
+version: 2
+
+sources:
+  - name: ethereum
+    description: >
+      abc
+
+    database: "{{ env_var('BQ_PUBLIC_DB') }}"
+    schema: "{{ env_var('BQ_PUBLIC_SCHEMA') }}"
+
+    tables:
+      - name: blocks
+      - name: decoded_events
+      - name: logs
+      - name: receipts
+      - name: token_transfers
+      - name: traces
+      - name: transactions
+
+models:
+  - name: stg_l_duplicate_log
+    description: This view is to identify records from the logs table that may be duplicate entries caused by an ETL/data-load glitch or a reorg artifact. In theory, log_index is unique to its respective block, so more than 1 record with the same log_index should be disregarded. This view is a data quality centric identification.
+    columns:
+      - name: block_hash
+        description: hash ID of the block.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: number of the block in the blockchain.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: unix timsestamp when the block was added to the block chain.
+        data_type: timestamp
+        quote: true
+      - name: log_index
+        description: the log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: address from which the log originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments
+        data_type: string
+        quote: true
+      - name: data
+        description: Contains one or more 32-byte non-indexed arguments of the log.
+        data_type: string
+        quote: true
+      - name: num_repeat
+        description: Number of entries that have the same values for these dimensions. Combinations that have only 1 record are exlcuded from this table.
+        data_type: int64
+        quote: true
+  - name: stg_l_faulty_duplicate_log
+    description: This view is to identify malformed logs, which are those that have more than 4 topics or where the address it originated from is missing. This view is a data quality centric identification.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this log was created from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this log originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+        data_type: string
+        quote: true
+      - name: num_topic
+        description: number of topics found in the log entry.
+        data_type: int64
+        quote: true
+  - name: stg_l_semantic_conflict_log
+    description: This is to identify logs with the same index but have different content. This indicates possible a bug in the log indexing process, for/reorg not properly resolved or a data corruption issue from the data-load job. This view is a data quality centric identification.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: distinct_metadata_count
+        description: for the given group by, how many distinct address/tipcs/data pertain to it. Only group bys that have more than 1 distinct combination are identified by this view.
+        data_type: int64
+        quote: true
+  - name: stg_r_failed_transaction
+    description: This view is to identify failed transactions. This view is a data quality centric identification.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: status
+        description: from receipts table, either 1 (success) or 0 (failure).
+        data_type: int64
+        quote: true
+  - name: stg_tr_duplicate_transaction
+    description: This view is to identify transactions with the same metadata but different hashes. This view is a data quality centric identification.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: value_lossless
+        description: Value transferred in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision.
+        data_type: string
+        quote: true
+      - name: gas
+        description: Quantity of gas units provided by the sender.
+        data_type: int64
+        quote: true
+      - name: num_transaction_hash
+        description: number of transactions that have the exact same metadata per groupby but have different hashes.
+        data_type: int64
+        quote: true
+      - name: transaction_hash_list
+        description: array list of transactions hashes that qualify as same metadata but different hashes per group by.
+        data_type: string
+        quote: true
+  - name: stg_tr_semantic_conflict_transaction
+    description: This view is to identify transactions that do the same thing but may have been submitted with different gas prices. This is explained by user who resubmit transactions with a higher gar price for faster processing.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: value_lossless
+        description: Value transferred in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision.
+        data_type: string
+        quote: true
+      - name: gas
+        description: Quantity of gas units provided by the sender.
+        data_type: int64
+        quote: true
+      - name: gas_price
+        description: Price per gas unit provided by the sender in Wei.
+        data_type: int64
+        quote: true
+      - name: num_transaction_hash
+        description: number of transactions that have the exact same metadata per groupby but have different hashes.
+        data_type: int64
+        quote: true
+      - name: hash_list
+        description: array list of transactions hashes that qualify as same metadata but different hashes per group by.
+        data_type: string
+        quote: true
+  - name: stg_tr_zero_value
+    description: This view is to identifies transactions with no value, which can represent failed or spammy transactions and don't contribute to economic activity.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: value
+        description: Value transferred in Wei. A decimal number represented as a BIGNUMERIC to preserve up to 128-bit numeric precision.
+        data_type: bignumeric
+        quote: true

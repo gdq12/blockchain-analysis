@@ -1,0 +1,6 @@
+version: 2
+
+macros:
+  - name: clean_bigquery_env
+    description: >
+      This macro compares current enabled bigqeury tables and views to the model nodes and removes the difference.

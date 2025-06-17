@@ -178,5 +178,13 @@ cython_debug/
 # keep hidden junk files local only
 **.DS_Store
 
-# keep doc files local only 
-**.pages
+####################################dbt#########################################
+# directories to keep local only
+dbt_packages/
+logs/
+target/
+
+# # legacy -- renamed to dbt_packages in v1
+# dbt_modules/
+**.user.yml
+**.vscode

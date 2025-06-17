@@ -1,4 +1,5 @@
 dbt-bq-dtc:
+  target: dev
   outputs:
     dev:
       type: bigquery
@@ -10,4 +11,3 @@ dbt-bq-dtc:
       keyfile: "{{ env_var('PROJECT_KEY') }}"
       fixed_retries: 1
       priority: interactive
-  target: dev

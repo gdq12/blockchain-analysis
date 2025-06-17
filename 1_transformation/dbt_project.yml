@@ -1,5 +1,6 @@
 name: 'blockchain_analysis_transform'
 version: '1.0.0'
+config-version: 2
 
 profile: 'dbt-bq-dtc'
 
@@ -20,57 +21,10 @@ models:
   blockchain_analysis_transform:
 
     stage:
-      blocks:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      blocks_aux:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      decoded_events: 
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      decoded_events_aux:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      logs:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      logs_aux:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      receipts:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      token_transfer:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      traces:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      traces_helper:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      transactions:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-      transactions_aux:
-        +materialized: view
-        +schema: stage
-        +enabled: true
-    core:
-    mart:   
+      +materialized: view
+      +schema: stage
+      +enabled: true  
 
 vars: 
   start_time: "'2022-09-01 17:00:00'"
-  end_time: "'2022-09-01 18:00:00''"
+  end_time: "'2022-09-01 18:00:00'"
