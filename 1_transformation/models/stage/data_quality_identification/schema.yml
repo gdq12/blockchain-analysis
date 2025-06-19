@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: ethereum
+    description: >
+      abc
+    database: "{{ env_var('BQ_PUBLIC_DB') }}"
+    schema: "{{ env_var('BQ_GOOG_PUBLIC_SCHEMA') }}"
+
+    tables:
+      - name: blocks
+      - name: decoded_events
+      - name: logs
+      - name: receipts
+      - name: token_transfers
+      - name: traces
+      - name: transactions
+
+  - name: crypto_ethereum
+    description: >
+      abc
+    database: "{{ env_var('BQ_PUBLIC_DB') }}"
+    schema: "{{ env_var('BQ_CRYPTO_PUBLIC_SCHEMA') }}"
+
+    tables: 
+      - name: tokens

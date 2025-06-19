@@ -6,8 +6,6 @@
 
 * duplicate traces
 
-* duplicate logs 
-
 * faulty logs
 
 * phantom token transfers
@@ -96,15 +94,26 @@
 
 * contract are deployed but never interacted/used, so may not be useful for contract centric KPIs 
 
-* other analysis they can be useful for 
+* other analysis that can be useful for 
 
-    + contract deploymen trends
+    + contract deployment trends
 
     + security audits (unused contracts may pose risks)
 
     + innovation tracking (new protocols often start with lowe usage) 
 
-* identified as `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.to_address is null` and `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.transaction_hash is null`
+* identified as `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions.to_address is null` or for double verification using the following query:
+
+    ```
+    SELECT tr.transaction_hash, tr.block_number, tr.from_address, tr.gas, tr.value, tc.to_address AS contract_address
+    FROM `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions` tr
+    JOIN `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.traces` tc
+    ON tr.transaction_hash = tc.transaction_hash
+    WHERE tr.to_address IS NULL
+    AND tc.trace_type = 'create'
+    AND tr.block_timestamp BETWEEN '2020-09-01 17:00:00' AND '2020-09-01 18:00:00'
+
+    ```
 
 * caveats: there may be a delay in usage, instead should try to track activity over time by seeing if there are call contracts in traces or events emitted in logs table.
 
@@ -151,6 +160,22 @@
 * these are traces that dont produce a proper trace tree/address for either ETL or ethereum env reasons 
 
 * identify caused by ETL reasons is when `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.traces.trace_address is null`
+
+    + to note that minor rewards pre-merge should be filtered out since they have simi characteristics to trace_address is null 
+
+        ```
+        SELECT
+        block_number,
+        action.author AS miner_address,
+        value,
+        subtrace_count,
+        trace_type
+        FROM `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.traces`
+        WHERE trace_type = 'reward'
+        AND transaction_hash IS NULL
+        AND action.author IS NOT NULL
+        AND subtrace_count = 0
+        ```
 
 * identify caused by ethereum issue is when `array_length(bigquery-public-data.goog_blockchain_ethereum_mainnet_us.traces.trace_address > 10` (suspicious deep nesting) or where 1 of the nested values is less than 0 (malformed/negative index)
 
@@ -268,7 +293,7 @@
         END AS metadata_status
     FROM `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers` tk
     JOIN `bigquery-public-data.crypto_ethereum.tokens` md
-    ON LOWER(tk.address) = LOWER(md.address)
+    ON LOWER(tk.address) = LOWER(md.address) and tk.event_type = 'ERC-20'
     and tk.block_hash = md.block_hash
     WHERE tk.block_timestamp BETWEEN '2022-01-01 17:00:00' AND '2022-01-01 18:00:00'
     ```

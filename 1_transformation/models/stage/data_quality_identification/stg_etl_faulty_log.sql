@@ -9,4 +9,4 @@ select
   l.topics,
   array_length(l.topics) num_topic
 from {{ source('ethereum', 'logs') }} l
-where array_length(l.topics) > 4 or l.address is null
+where l.address is null

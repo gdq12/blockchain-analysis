@@ -21,9 +21,10 @@ models:
   blockchain_analysis_transform:
 
     stage:
-      +materialized: view
-      +schema: stage
-      +enabled: true  
+      data_quality_identification:
+        +materialized: view
+        +schema: stage
+        +enabled: true  
 
 vars: 
   start_time: "'2022-09-01 17:00:00'"
