@@ -9,7 +9,7 @@ select
   action.author, 
   action.from_address action_from_address, 
   action.to_address action_to_address, 
-  action.value action_value
+  action.value_lossless action_value_lossless
 from {{ source('ethereum', 'traces') }}
 group by  all
 having count(1) > 1

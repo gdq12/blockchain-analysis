@@ -2,8 +2,7 @@ version: 2
 
 sources:
   - name: ethereum
-    description: >
-      abc
+    description: Google Cloud's Ethereum mainnet data on BigQuery provides an easy and powerful way to uncover web3 data. This dataset surfaces data from the Ethereum blockchain and includes tables for blocks, transactions, logs, and more. More background on the dataset can be found [here](https://console.cloud.google.com/marketplace/product/bigquery-public-data/blockchain-analytics-ethereum-mainnet-us?inv=1&invt=Ab0m3g&project=blockchain-analysis-460714).
     database: "{{ env_var('BQ_PUBLIC_DB') }}"
     schema: "{{ env_var('BQ_GOOG_PUBLIC_SCHEMA') }}"
 
@@ -17,10 +16,518 @@ sources:
       - name: transactions
 
   - name: crypto_ethereum
-    description: >
-      abc
+    description: Ethereum is a crypto currency which leverages blockchain technology to store transactions in a distributed ledger. A blockchain is an ever-growing "tree" of blocks, where each block contains a number of transactions. More background on the dataset can be found [here](https://console.cloud.google.com/marketplace/product/ethereum/crypto-ethereum-blockchain?inv=1&invt=Ab0m3g&project=blockchain-analysis-460714).
     database: "{{ env_var('BQ_PUBLIC_DB') }}"
     schema: "{{ env_var('BQ_CRYPTO_PUBLIC_SCHEMA') }}"
 
-    tables: 
+    tables:
       - name: tokens
+
+models:
+  - name: stg_etl_duplicate_log
+    description: This view is to identify log records that are duplicates due to any error that occured during google's extraction process. There should only be 1 log_index per block.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this log originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+        data_type: string
+        quote: true
+      - name: data
+        description: Contains one or more 32-byte non-indexed arguments of the log.
+        data_type: string
+        quote: true
+
+  - name: stg_etl_duplicate_traces
+    description: This view is to identify duplicate trace_addresses caused by google's extraction jobs.
+    columns:
+      - name: block_hash
+        description: Hash of the block this trace was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this trace was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: trace_address
+        description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
+        data_type: int64
+        quote: true
+      - name: trace_type
+        description: Trace type. One of "create", "suicide", "call" or "reward".
+        data_type: string
+        quote: true
+      - name: author
+        description: Recipient of the block or uncle reward. Available only for "reward" traces.
+        data_type: string
+        quote: true
+      - name: action_from_address
+        description: Address of the sender. Null for "suicide" and "reward" traces.
+        data_type: string
+        quote: true
+      - name: action_to_address
+        description: Address of the receiver. Null for "suicide" and "reward" traces.
+        data_type: string
+        quote: true
+      - name: action_value_lossless
+        description: Value transferred by this trace in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision. Available only for "call" traces.
+        data_type: string
+        quote: true
+
+  - name: stg_etl_duplicate_transaction
+    description: This view identifies duplicate transactions due to googles extraction jobs.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: value_lossless
+        description: Value transferred in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision.
+        data_type: string
+        quote: true
+      - name: gas
+        description: Quantity of gas units provided by the sender.
+        data_type: int64
+        quote: true
+      - name: gas_price
+        description: Price per gas unit provided by the sender in Wei.
+        data_type: int64
+        quote: true
+      - name: from_address
+        description: Address of the sender.
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the receiver.
+        data_type: string
+        quote: true
+      - name: nonce
+        description: Number of transactions made by the sender prior to this one.
+        data_type: int64
+        quote: true
+
+  - name: stg_etl_faulty_log
+    description: This view is to identify faulty log entries that were produced by google's extraction-load pipeline. The logs are faulty because it is not possible for Ethereum to produce a log without the authors address.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this log was created from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this log originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+        data_type: string
+        quote: true
+
+  - name: stg_etl_faulty_trace
+    description: This view identifies malformed and inconsistent traces cause by errors in google's extraction-load pipeline. Miner reward traces are excluded from consideration since they also have no trace_address. Inconsistent traces to be exluded from the project are failed traces with critical types (`trace_address is null`) and unexpected nulls (`trace_type = 'call' and action.to_address is null`).
+    columns:
+      - name: block_hash
+        description: Hash of the block this trace was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this trace was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: trace_address
+        description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
+        data_type: int64
+        quote: true
+
+  - name: stg_etl_phantom_token_transfer
+    description: This view is to identify token activity that doesn't have a coressponding log. This is can be attributed to a decoding error from google's extract-load pipeline.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this event was emitted from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: from_address
+        description: Address of the previous owner of the token(s).
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the new owner of the token(s).
+        data_type: string
+        quote: true
+      - name: quantity
+        description: Quantity of tokens being transferred.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_duplicate_log
+    description: This view is to identify log entries that are duplicates due to Ethereum developer acticity (reorg/re-indexing/data corruption issues).
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: evaluation_flag
+        description: Abbreviated description for identifying the duplicate log entry. To be used to identify the record when merged with non-anomaly data.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_duplicate_transaction
+    description: This view is to identify duplicate transaction created by users of the Ethereum blockchain. The main reason they are created is to create a new transaction with a new gas price in hopes of it being executed faster.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: value_lossless
+        description: Value transferred in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision.
+        data_type: string
+        quote: true
+      - name: gas
+        description: Quantity of gas units provided by the sender.
+        data_type: int64
+        quote: true
+      - name: from_address
+        description: Address of the sender.
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the receiver.
+        data_type: string
+        quote: true
+      - name: nonce
+        description: Number of transactions made by the sender prior to this one.
+        data_type: int64
+        quote: true
+      - name: evaluation_flag
+        description: Abbreviated description of the duplicate transaction record. This is to more easily to identify these records when they are merged with non-anomaly data.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_failed_faulty_trace
+    description: This view is to identify failed and faulty traces created in the Ethereum blockchain ecosystem. Classifications can be found in `evaluation_flag`.
+    columns:
+      - name: block_hash
+        description: Hash of the block this trace was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this trace was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: trace_address
+        description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
+        data_type: int64
+        quote: true
+      - name: evaluation_flag
+        description: |-
+          Abbreviated description of identified faulty traces. This is used to later easily identified these records when merged with non-anomaly ones. The different types of classifications are: 
+          * `trace_suspicious_deep_nesting`:  trace_address > 10 (malformed trace)
+          * `trace_malformed_negative_index`: when one of the values in trace_addres is less than 0, aka negative (suspicious deep nesting)
+          * `trace_inconsistent_trace`: delegatecall trace that have a value greater than 0 (inconsistent trace)
+          * `trace_failed`: trace with an error message (failed trace)
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_faulty_log
+    description: This view is to identify fulty logs created in the Ethereum blockchain. Log topics by default are max 4 hex index arguments long, anything more is faulty.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this log was created from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this log originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+        data_type: string
+        quote: true
+      - name: evaluation_flag
+        description: Abbreviated description of the record. This is to easily identify the record when merged with non-anomaly data.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_incorrect_token_metadata
+    description: This view is used to identify token with incomplete or incorrect metadata created in the Ethereum blockchain. Specifics on what makes a token incorrect can be found in `evaluation_flag`.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this event was emitted from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: evaluation_flag
+        description: |-
+          Abbreviated description of token transfers identified when evaluating the associated metadata from `bigquery-public-data.crypto_ethereum.tokens`. The possible entries are: 
+          * `token_transfer_missing_data`: token name and symbol are null.
+          * `token_transfer_missing_decimals`: number of decimals the token uses isn't provided.
+          * `token_transfer_suspicious_decimals`: number of decimals the token uses is more than 30.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_pre_merge_miner_reward
+    description: This view is to identify miner rewards prior to The Merge (proof-of-work) in the Ethereum blockchain. It is a helper model for `stg_etl_faulty_trace`, to prevent these traces from being mistakenly identified as faulty.
+    columns:
+      - name: block_hash
+        description: Hash of the block this trace was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this trace was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: miner_address
+        description: Recipient of the block or uncle reward. Available only for "reward" traces.
+        data_type: string
+        quote: true
+      - name: value_lossless
+        description: Value transferred by this trace in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision. Available only for "call" traces.
+        data_type: string
+        quote: true
+      - name: subtrace_count
+        description: Number of subtraces of this trace.
+        data_type: int64
+        quote: true
+      - name: trace_type
+        description: Trace type. One of "create", "suicide", "call" or "reward".
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_spam_token_transfer
+    description: This view is to identify spam or test token transfers executed by new smar contracts in the Ethereum blockchain.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this event was emitted from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: evaluation_flag
+        description: Abbreviation for record type. This is used when merging with non-anomaly data so it can be more easily identified as such.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_zero_value_failed_transaction
+    description: This view is to identify transactions that have either failed or transfered 0 Wei within the Ethereum blockchain.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: evaluation_flag
+        description: |-
+          Abbreviation for classification of transaction. This is to be used when records here are merged with non-anomaly data. The possible entries are:
+          * `transaction_failed`: this is where the status of the transaction was 0 (failed) in `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.receipts`.
+          * `transaction_zero_value`: this is when the value transfered for the transaction is 0 Wei.
+        data_type: string
+        quote: true

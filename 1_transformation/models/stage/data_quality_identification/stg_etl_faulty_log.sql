@@ -6,7 +6,6 @@ select
   l.transaction_index,
   l.log_index,
   l.address,
-  l.topics,
-  array_length(l.topics) num_topic
+  l.topics
 from {{ source('ethereum', 'logs') }} l
 where l.address is null
