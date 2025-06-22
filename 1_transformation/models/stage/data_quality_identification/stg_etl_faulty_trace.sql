@@ -4,7 +4,7 @@ select
   tr.block_timestamp,
   tr.transaction_hash,
   tr.transaction_index,
-  tr.trace_address
+  ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(tr.trace_address) ta), '.') trace_id
 from {{ source('ethereum', 'traces') }} tr
 where not exists (select 1 
                 from {{ ref('stg_blockchain_pre_merge_miner_reward') }} mr
