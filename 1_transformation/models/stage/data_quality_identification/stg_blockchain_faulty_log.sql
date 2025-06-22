@@ -10,3 +10,5 @@ select
   'log_faulty_topic' evaluation_flag
 from {{ source('ethereum', 'logs') }} l
 where array_length(l.topics) > 4 
+or l.topics is null 
+or array_length(l.topics) = 0

@@ -465,8 +465,8 @@ models:
         data_type: string
         quote: true
 
-  - name: stg_blockchain_spam_token_transfer
-    description: This view is to identify spam or test token transfers executed by new smar contracts in the Ethereum blockchain.
+  - name: stg_blockchain_spam_unusual_token_transfer
+    description: This view is to identify spam/test or unusual token transfers executed by new smart contracts in the Ethereum blockchain. Specifics on record type can be found in `evaluation_flag`.
     columns:
       - name: block_hash
         description: Hash of the block this event was emitted from.
@@ -497,7 +497,10 @@ models:
         data_type: string
         quote: true
       - name: evaluation_flag
-        description: Abbreviation for record type. This is used when merging with non-anomaly data so it can be more easily identified as such.
+        description: |-
+          Abbreviation for record type. This is used when merging with non-anomaly data so it can be more easily identified as such. The possible entries are:
+          * `token_transfer_spam_test`: when quantity is 0, indicating that the event was meant to test a contract out or spam.
+          *  `token_transfer_unusual_event_type`: when the event type is not ERC-20, ERC-721 or ERC-1155.
         data_type: string
         quote: true
 
@@ -529,5 +532,108 @@ models:
           Abbreviation for classification of transaction. This is to be used when records here are merged with non-anomaly data. The possible entries are:
           * `transaction_failed`: this is where the status of the transaction was 0 (failed) in `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.receipts`.
           * `transaction_zero_value`: this is when the value transfered for the transaction is 0 Wei.
+        data_type: string
+        quote: true
+
+  - name: stg_blockchain_failed_suspicious_receipt
+    description: This view is to identify receipt records that were either produced for failed/reverted transactions or suspicious on-chain activity in the Ethereum blockchain.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: evaluation_flag
+        description: |-
+          Abbreviation of the condition that identified the record in the table. This is to be used in merging with non-anomaly data to easily identify these records. The possible entries are:
+          * `receipts_failed_reverted_transaction`: where gas_used is null 
+          * `receipts_suspicious_on_chain_behavior`: where gas_used = 0 and status = 1, could be to to no-op or gassless transactions
+        data_type: string
+        quote: true
+
+  - name: stg_etl_duplicate_decoded_event
+    description: This view is to identify duplicate decoded events from the log table that was produced from googles extract-load job.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: log_index
+        description: The event's index position in the block.
+        data_type: int64
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: topics
+        description: The original indexed topics of the event.
+        data_type: string
+        quote: true
+      - name: args_string
+        description: The decoded arguments of the event as a string of the JSON array.
+        data_type: string
+        quote: true
+
+  - name: stg_etl_duplicate_token_transfer
+    description: This view is to identify duplicate records in the token_transfer table that were produced by googles extract-load job.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: event_type
+        description: Token standard that matches the event.
+        data_type: string
+        quote: true
+      - name: log_index
+        description: The event's index position in the block.
+        data_type: int64
+        quote: true
+      - name: operator_address
+        description: Address of the transfer operator.
+        data_type: string
+        quote: true
+      - name: from_address
+        description: Address of the previous owner of the token(s).
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the new owner of the token(s).
+        data_type: string
+        quote: true
+      - name: quantity
+        description: Quantity of tokens being transferred.
         data_type: string
         quote: true

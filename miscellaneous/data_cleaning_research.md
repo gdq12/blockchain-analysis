@@ -1,55 +1,3 @@
-## Summary of Data Quality Applications
-
-### Faulty records due to googles extraction-load pipeline
-
-* duplicate transactions 
-
-* duplicate traces
-
-* faulty logs
-
-* phantom token transfers
-
-* Missing/Malformed traces (only where trace_address is null)
-
-* Inconsistent traces (only 2 of 3 reasons)
-
-* duplicate logs (1 of the 2) 
-
-* faulty logs (1 of 2)
-
-* phantom token transfer
-
-### Records that should be removed from high level KPI consideration
-
-* zero-valued transactions
-
-* failed trasnactions
-
-* duplicate transactions based on semantic duplicates 
-
-* contracts w/o usage for the time period analysis 
-
-* duplicate traces 
-
-* internal transactions (theyre impact already covered in transactions table)
-
-    + perhaps just use for protocol-level KPIs --> then filter out failed traces 
-
-* Missing/Malformed traces associated to suspicious deep nesting or trace negative indexing
-
-* inconsistent traces due to semantic error 
-
-* duplicate logs due to a bug in the blockchain
-
-* faulty logs with topics longer than 4 objects 
-
-* spam/test token transfers 
-
-* token transfers with incorrect token metadata 
-
-* outliers 
-
 ## Data Quality Evaluation Definitions
 
 ### Zero-valued transactions 
@@ -217,9 +165,33 @@
 
 * those with malformed topics or no address where the log came from 
 
-* identified as potential anomaly if find a clustering pattern when in `array_length(bigquery-public-data.goog_blockchain_ethereum_mainnet_us.logs.topics) > 4` 
+* identified as potential anomaly if find a clustering pattern when in `array_length(bigquery-public-data.goog_blockchain_ethereum_mainnet_us.logs.topics) > 4`, or topics is null or topic array length is 0.
 
 * identified as ETL source issue when in `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.logs.address is null`
+
+### Duplicate token transfers 
+
+* token transfers that were inserted into token_transfer more than 1x due to googles extraction-load job 
+
+* identified via:
+
+    ```
+    select 
+    tk.block_hash, 
+    tk.transaction_hash,
+    tk.event_hash,
+    tk.event_type,
+    de.log_index,
+    tk.operator_address,
+    tk.from_address,
+    tk.to_address,
+    tk.quantity
+    from `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers` tk
+    join `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.decoded_events` de on tk.block_hash = de.block_hash and tk.transaction_hash = de.transaction_hash and tk.event_hash = de.event_hash and tk.from_address = de.address
+    where tk.block_timestamp between '2022-09-01 17:00:00' and '2022-09-01 18:00:00'
+    group by all 
+    having count(1) > 1
+    ```
 
 ### Phantom token transfers 
 
@@ -259,6 +231,12 @@
 * token transfers probably done for testing code/protocol/contract etc 
 
 * identified as `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers.quantity = 0`
+
+### Unusual event type for token transfers 
+
+* indicates custom or malformed contract, its a reflection of Ethereum blockchain user activity 
+
+* identified as `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers.event_type` not being `ERC-20`, `ERC-721` or `ERC-1155`
 
 ### Incorrect token metadata 
 
@@ -301,6 +279,64 @@
 * the data cleaning for this feature will require multiple model/layers for symbol unique detection can only be done over time and not within a single transaction 
 
 * multi symbols could be categorized more as suspicious activity and potentially be included in anomaly/behavior analysis 
+
+### Duplicate decoded events 
+
+* decoded events that are inserted more than once due to googles extract-load jobs 
+
+* identified as when in `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.decoded_events` there is more than 1 row for the combo block_hash, transaction_hash, log_index, event_hash, address, topics, args
+
+### Faulty decoded events
+
+* events with faulty topics and args that were not extracted correctly from logs --> this is an ETL issue 
+
+* the following query captures this 
+
+    ```
+    select 
+    de.block_hash,
+    de.block_number,
+    de.transaction_hash,
+    de.transaction_index,
+    de.log_index,
+    de.address,
+    de.args,
+    de.topics
+    from `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.decoded_events` de 
+    where de.block_timestamp between '2022-09-01 17:00:00' and '2022-09-01 18:00:00'
+    and (
+    (not exists (select 1
+    from `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.logs` l
+    where de.block_hash = l.block_hash 
+    and de.transaction_hash = l.transaction_hash 
+    and de.log_index = l.log_index 
+    and de.address = l.address
+    and to_json_string(de.topics) = to_json_string(l.topics))
+    )
+    or
+    (de.args is null)
+    or 
+    (array_length(de.topics) > 4)
+    or 
+    (de.topics is null)
+    or 
+    (array_length(de.topics) = 0)
+    )
+    ```
+
+* the query captures the parameters but it is too inefficient in BigQuery, therefor best to just use a clean version of the log tbl to do the filtering out of these faulty records.
+
+### Faulty receipts
+
+* records in the receipts table that seem to be an incorrect result of a transaction.
+
+* identified as an ETL issue where `transaction_hash` is null or can't be found in the transaction table.
+
+* identified as anomaly behavior from the blockchain:
+
+    + failed or reverted transactions: `gas_used` is null
+
+    + suspicious on-chain behavior where its possible its a no-op or gassless transaction: `gas_used` = 0 and `status` = 1
 
 ### Outliers 
 
