@@ -3,15 +3,461 @@ version: 2
 models:
 
   - name: stg_clean_blocks
+    description: This is a clean version of the `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.blocks`.
+    columns:
+      - name: block_hash
+        description: Hash of the block.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: parent_hash
+        description: Hash of the parent block.
+        data_type: string
+        quote: true
+      - name: size
+        description: Size of this block in bytes.
+        data_type: int64
+        quote: true
+      - name: extra_data
+        description: Extra data of this block.
+        data_type: string
+        quote: true
+      - name: gas_limit
+        description: Maximum gas allowed in this block.
+        data_type: int64
+        quote: true
+      - name: gas_used
+        description: Total gas used by all transactions in this block.
+        data_type: int64
+        quote: true
+      - name: base_fee_per_gas
+        description: Reserve price that transactions must pay for inclusion in this block.
+        data_type: int64
+        quote: true
+      - name: mix_hash
+        description: 32-byte hash which proves, when combined with the nonce, that a sufficient amount of computation has been carried out on this block.
+        data_type: string
+        quote: true
+      - name: nonce
+        description: 8-byte integer in hexadecimal format. Used together with the mix hash to show the proof of work.
+        data_type: string
+        quote: true
+      - name: difficulty
+        description: Difficulty for this block.
+        data_type: bignumeric
+        quote: true
+      - name: total_difficulty
+        description: Accumulated difficulty of the chain until this block.
+        data_type: bignumeric
+        quote: true
+      - name: miner
+        description: Address of the beneficiary to whom the mining rewards were given.
+        data_type: string
+        quote: true
+      - name: sha3_uncles
+        description: SHA3 of the uncles data in the block.
+        data_type: string
+        quote: true
+      - name: transaction_count
+        description: Number of transactions in the block.
+        data_type: int64
+        quote: true
+      - name: transactions_root
+        description: Root of the transaction trie of the block.
+        data_type: string
+        quote: true
+      - name: receipts_root
+        description: Root of the receipts trie of the block.
+        data_type: string
+        quote: true
+      - name: state_root
+        description: Root of the final state trie of the block.
+        data_type: string
+        quote: true
+      - name: logs_bloom
+        description: Bloom filter for the logs of the block.
+        data_type: string
+        quote: true
+      - name: withdrawals_root
+        description: Validator withdrawal root.
+        data_type: string
+        quote: true
+      - name: withdrawals
+        description: Validator withdrawals.
+        data_type: record
+        quote: true
 
   - name: stg_clean_decoded_events
+    description: This is a clean version of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.decoded_events`, with duplicate and faulty records removed. Along with removing records that were not extracted from the log table.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this event was emitted from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: log_index
+        description: The event's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: topics
+        description: The original indexed topics of the event.
+        data_type: string
+        quote: true
+      - name: args
+        description: The decoded arguments of the event as a JSON array.
+        data_type: json
+        quote: true
+      - name: removed
+        description: Whether or not the event was orphaned off the main chain.
+        data_type: boolean
+        quote: true
+      - name: event_signature
+        description: Function signature of the event.
+        data_type: string
+        quote: true
 
   - name: stg_clean_logs
+    description: This is a clean version of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.logs`. It removes identified duplicate and faulty log entries.
+    columns:
+      - name: block_hash
+        description: Hash of the block this log was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this log was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this log was created from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: log_index
+        description: The log's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this log originated.
+        data_type: string
+        quote: true
+      - name: data
+        description: Contains one or more 32-byte non-indexed arguments of the log.
+        data_type: string
+        quote: true
+      - name: topics
+        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+        data_type: string
+        quote: true
+      - name: removed
+        description: Whether or not the log was orphaned off the main chain.
+        data_type: boolean
+        quote: true
 
   - name: stg_clean_receipts
+    description: This is a clean version of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.receipts`. Only records where the `transaction_hash` is also found in the transactions table is considered here.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: from_address
+        description: Address of the sender.
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the receiver.
+        data_type: string
+        quote: true
+      - name: contract_address
+        description: Hexadecimal-encoded address of new contract or absent if no contract was created.
+        data_type: string
+        quote: true
+      - name: cumulative_gas_used
+        description: Gas used by this and all preceding transactions in the block.
+        data_type: int64
+        quote: true
+      - name: gas_used
+        description: Gas used by this transaction alone.
+        data_type: int64
+        quote: true
+      - name: effective_gas_price
+        description: Actual value per gas deducted from the sender's account.
+        data_type: int64
+        quote: true
+      - name: logs_bloom
+        description: Bloom filter of the logs from this transaction.
+        data_type: string
+        quote: true
+      - name: root
+        description: Post-transaction state root.
+        data_type: string
+        quote: true
+      - name: status
+        description: Either 1 (success) or 0 (failure).
+        data_type: int64
+        quote: true
 
   - name: stg_clean_token_transfers
+    description: This is a clean veersion of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.token_transfers`. Records that have been identified as duplicates or phantom token transfers are excluded here.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this event was emitted from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: event_index
+        description: The event's index position in the block.
+        data_type: int64
+        quote: true
+      - name: batch_index
+        description: The transfer's position in the batch transfer event.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: event_type
+        description: Token standard that matches the event.
+        data_type: string
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: event_signature
+        description: Function signature of the event.
+        data_type: string
+        quote: true
+      - name: operator_address
+        description: Address of the transfer operator.
+        data_type: string
+        quote: true
+      - name: from_address
+        description: Address of the previous owner of the token(s).
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the new owner of the token(s).
+        data_type: string
+        quote: true
+      - name: token_id
+        description: Identifier of the token(s) being transferred.
+        data_type: string
+        quote: true
+      - name: quantity
+        description: Quantity of tokens being transferred.
+        data_type: string
+        quote: true
+      - name: removed
+        description: Whether or not the event was orphaned off the main chain.
+        data_type: boolean
+        quote: true
 
   - name: stg_clean_traces
+    description: This is a clean version of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.traces`. Records that have been identified as duplicate or faulty have been excluded.
+    columns:
+      - name: block_hash
+        description: Hash of the block this trace was created from.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block this trace was created from.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: trace_type
+        description: Trace type. One of "create", "suicide", "call" or "reward".
+        data_type: string
+        quote: true
+      - name: trace_address
+        description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
+        data_type: int64
+        quote: true
+      - name: subtrace_count
+        description: Number of subtraces of this trace.
+        data_type: int64
+        quote: true
+      - name: action
+        description: Action being carried out by this trace.
+        data_type: record
+        quote: true
+      - name: result
+        description: Result of this trace.
+        data_type: record
+        quote: true
+      - name: error
+        description: Error message of this trace, if any.
+        data_type: string
+        quote: true
 
   - name: stg_clean_transactions
+    description: This is a clean version of `bigquery-public-data.goog_blockchain_ethereum_mainnet_us.transactions`. Records that are identified as duplicate are filtered out and only those where the block_has also exists in the blocks table are considered.
+    columns:
+      - name: block_hash
+        description: Hash of the block in which this transaction was located.
+        data_type: string
+        quote: true
+      - name: block_number
+        description: Number of the block in which this transaction was located.
+        data_type: int64
+        quote: true
+      - name: block_timestamp
+        description: Unix timestamp when the block was added to the blockchain.
+        data_type: timestamp
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction.
+        data_type: string
+        quote: true
+      - name: transaction_index
+        description: The transaction's index position in the block.
+        data_type: int64
+        quote: true
+      - name: nonce
+        description: Number of transactions made by the sender prior to this one.
+        data_type: int64
+        quote: true
+      - name: from_address
+        description: Address of the sender.
+        data_type: string
+        quote: true
+      - name: to_address
+        description: Address of the receiver.
+        data_type: string
+        quote: true
+      - name: value
+        description: Value transferred in Wei. A decimal number represented as a BIGNUMERIC to preserve up to 128-bit numeric precision.
+        data_type: bignumeric
+        quote: true
+      - name: value_lossless
+        description: Value transferred in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision.
+        data_type: string
+        quote: true
+      - name: gas
+        description: Quantity of gas units provided by the sender.
+        data_type: int64
+        quote: true
+      - name: gas_price
+        description: Price per gas unit provided by the sender in Wei.
+        data_type: int64
+        quote: true
+      - name: input
+        description: Data sent along with the transaction, with a maximum size of 32 bytes.
+        data_type: string
+        quote: true
+      - name: max_fee_per_gas
+        description: Maximum fee per unit of gas for this transaction.
+        data_type: int64
+        quote: true
+      - name: max_priority_fee_per_gas
+        description: Maximum priority fee per unit of gas for this transaction.
+        data_type: int64
+        quote: true
+      - name: transaction_type
+        description: Type of the transaction.
+        data_type: int64
+        quote: true
+      - name: chain_id
+        description: Chain ID used in transaction signing.
+        data_type: int64
+        quote: true
+      - name: access_list
+        description: List of addresses and storage keys that the transaction plans to access and has pre-paid gas for.
+        data_type: record
+        quote: true
+      - name: r
+        description: ECDSA signature r.
+        data_type: string
+        quote: true
+      - name: s
+        description: ECDSA signature s.
+        data_type: string
+        quote: true
+      - name: v
+        description: ECDSA signature v.
+        data_type: string
+        quote: true
+      - name: y_parity
+        description: ECDSA signature y_parity.
+        data_type: string
+        quote: true

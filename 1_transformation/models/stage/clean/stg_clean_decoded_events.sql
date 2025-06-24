@@ -63,6 +63,7 @@ select
     de.log_index, 
     de.address, 
     de.event_hash, 
+    de.event_signature, 
     de.topics, 
     de.args, 
     de.removed
