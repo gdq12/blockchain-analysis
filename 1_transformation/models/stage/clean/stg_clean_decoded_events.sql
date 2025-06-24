@@ -13,7 +13,7 @@ with in_log as
     de.args, 
     de.removed
 from {{ source('ethereum', 'decoded_events') }} de 
-join {{ ref('stg_clean_log') }} l on de.block_hash = l.block_hash 
+join {{ ref('stg_clean_logs') }} l on de.block_hash = l.block_hash 
                                 and de.transaction_hash = l.transaction_hash 
                                 and de.log_index = l.log_index 
                                 and de.address = l.address

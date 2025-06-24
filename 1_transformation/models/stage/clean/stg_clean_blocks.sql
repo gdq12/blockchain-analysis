@@ -1,0 +1,25 @@
+select 
+    b.block_hash, 
+    b.block_number, 
+    b.block_timestamp, 
+    b.parent_hash, 
+    b.size, 
+    b.extra_data, 
+    b.gas_limit, 
+    b.gas_used, 
+    b.base_fee_per_gas, 
+    b.mix_hash, 
+    b.nonce, 
+    b.difficulty, 
+    b.total_difficulty, 
+    b.miner, 
+    b.sha3_uncles, 
+    b.transaction_count, 
+    b.transactions_root, 
+    b.receipts_root, 
+    b.state_root, 
+    b.logs_bloom, 
+    b.withdrawals_root, 
+    b.withdrawals
+from {{ source('ethereum', 'blocks') }} b 
+where b.block_timestamp between between {{ var('start_time') }} and {{ var('end_time') }}

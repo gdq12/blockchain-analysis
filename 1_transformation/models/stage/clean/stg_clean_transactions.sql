@@ -22,6 +22,8 @@ select
     tr.v, 
     tr.y_parity
 from {{ source('ethereum', 'transactions') }} tr
+join {{ ref('stg_clean_blocks') }} b on tr.block_hash = b.block_hash 
+                                    and tr.block_number = b.block_number
 where not exists in (select 1 
                     from {{ref ('stg_etl_duplicate_transaction') }} dtr 
                     where tr.block_hash = dtr.block_hash
