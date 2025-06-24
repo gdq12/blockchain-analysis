@@ -14,4 +14,5 @@ left join {{ source('ethereum', 'logs') }} l on tk.transaction_hash = l.transact
                                             and tk.block_number = l.block_number
                                             and tk.address = l.address
                                             and tk.event_hash = l.topics[SAFE_OFFSET(0)]
-where l.transaction_hash IS NULL
+where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and l.transaction_hash IS NULL

@@ -12,7 +12,8 @@ select
     when error is not null then 'trace_failed'
     end evaluation_flag
 from {{ source('ethereum', 'traces') }}
-where (
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (
     -- failed trace
     (error is not null )
     or

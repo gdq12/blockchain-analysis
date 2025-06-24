@@ -10,4 +10,5 @@ select
     end evaluation_flag
 from {{ source('ethereum', 'transactions') }} tr 
 join {{ source('ethereum', 'receipts') }} r on tr.transaction_hash = r.transaction_hash
-where r.status = 0 or tr.value = 0
+where tr.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (r.status = 0 or tr.value = 0)

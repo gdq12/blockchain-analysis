@@ -22,4 +22,4 @@ left join {{ ref('stg_etl_faulty_log') }} fl on l.block_hash = fl.block_hash
                                             and array_to_string(l.topics, '') = fl.topics_as_string 
 where dl.block_hash is null
 and fl.block_hash is null 
-and l.block_timestamp between between {{ var('start_time') }} and {{ var('end_time') }}
+and l.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

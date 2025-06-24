@@ -9,6 +9,8 @@ select
   l.topics,
   'log_faulty_topic' evaluation_flag
 from {{ source('ethereum', 'logs') }} l
-where array_length(l.topics) > 4 
-or l.topics is null 
-or array_length(l.topics) = 0
+where l. block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (array_length(l.topics) > 4 
+    or l.topics is null 
+    or array_length(l.topics) = 0
+    )

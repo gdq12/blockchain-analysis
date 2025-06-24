@@ -7,7 +7,8 @@ select
     subtrace_count,
     trace_type
 from {{ source('ethereum', 'traces') }}
-where trace_type = 'reward'
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and trace_type = 'reward'
 and transaction_hash is null
 and action.author is not null
 and subtrace_count = 0

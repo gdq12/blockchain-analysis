@@ -11,5 +11,6 @@ select
   action.to_address action_to_address, 
   action.value_lossless action_value_lossless
 from {{ source('ethereum', 'traces') }}
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 group by  all
 having count(1) > 1

@@ -6,7 +6,8 @@ select
   tr.transaction_index,
   ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(tr.trace_address) ta), '.') trace_id
 from {{ source('ethereum', 'traces') }} tr
-where not exists (select 1 
+where tr.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and not exists (select 1 
                 from {{ ref('stg_blockchain_pre_merge_miner_reward') }} mr
                 where tr.block_number = mr.block_number
                 and tr.action.value_lossless = mr.value_lossless

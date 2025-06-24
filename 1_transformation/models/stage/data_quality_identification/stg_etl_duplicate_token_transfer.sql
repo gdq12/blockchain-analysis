@@ -13,5 +13,6 @@ join {{ source('ethereum', 'decoded_events')}} de on tk.block_hash = de.block_ha
                                                   and tk.transaction_hash = de.transaction_hash 
                                                   and tk.event_hash = de.event_hash 
                                                   and tk.from_address = de.address
+where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 group by all 
 having count(1) > 1

@@ -24,4 +24,4 @@ left join {{ ref('stg_etl_faulty_trace') }} ftr on tr.block_hash = ftr.block_has
                                                 and ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(tr.trace_address) ta), '.') = ftr.trace_id 
 where dtr.block_hash is null 
 and ftr.block_hash is null 
-and tr.block_timestamp between between {{ var('start_time') }} and {{ var('end_time') }}
+and tr.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

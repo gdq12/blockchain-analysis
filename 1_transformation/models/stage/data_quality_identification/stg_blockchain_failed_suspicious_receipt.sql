@@ -9,7 +9,8 @@ select
         when gas_used = 0 and status = 1 then 'receipts_suspicious_on_chain_behavior'
         end evaluation_flag
 from {{ source('ethereum', 'receipts') }}
-where (
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (
     -- failed/reverted transaction
     (gas_used is null)
     or 

@@ -9,5 +9,6 @@ select
   tr.to_address,
   tr.nonce
 from {{ source('ethereum', 'transactions') }} tr 
+where tr.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 group by all 
 having count(distinct tr.transaction_hash) > 1

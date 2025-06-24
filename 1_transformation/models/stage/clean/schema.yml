@@ -1,0 +1,17 @@
+version: 2
+
+models:
+
+  - name: stg_clean_blocks
+
+  - name: stg_clean_decoded_events
+
+  - name: stg_clean_logs
+
+  - name: stg_clean_receipts
+
+  - name: stg_clean_token_transfers
+
+  - name: stg_clean_traces
+
+  - name: stg_clean_transactions

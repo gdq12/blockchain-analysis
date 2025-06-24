@@ -8,7 +8,8 @@ select
     coalesce(to_json_string(topics), '0') topics_as_string, 
     coalesce(to_json_string(args), '0') args_as_string
 from {{ source('ethereum', 'decoded_events') }}
-where (
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (
     (args is null)
     or 
     (array_length(topics) > 4)

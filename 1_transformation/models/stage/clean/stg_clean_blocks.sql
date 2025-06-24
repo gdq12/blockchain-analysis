@@ -22,4 +22,4 @@ select
     b.withdrawals_root, 
     b.withdrawals
 from {{ source('ethereum', 'blocks') }} b 
-where b.block_timestamp between between {{ var('start_time') }} and {{ var('end_time') }}
+where b.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

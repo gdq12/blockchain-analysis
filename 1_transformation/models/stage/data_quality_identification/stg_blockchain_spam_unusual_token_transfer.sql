@@ -13,7 +13,8 @@ select
             then 'token_transfer_unusual_event_type' 
         end evaluation_flag
 from {{ source('ethereum', 'token_transfers') }}
-where (
+where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
+and (
     -- spam/test token transfers
     (coalesce(quantity, '0') = '0')
     or
