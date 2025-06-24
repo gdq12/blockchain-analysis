@@ -47,8 +47,8 @@ models:
         description: Address from which this log originated.
         data_type: string
         quote: true
-      - name: topics
-        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+      - name: topics_as_string
+        description: Array (as string) of 0 to 4 32-byte hex of indexed log arguments.
         data_type: string
         quote: true
       - name: data
@@ -175,8 +175,8 @@ models:
         description: Address from which this log originated.
         data_type: string
         quote: true
-      - name: topics
-        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+      - name: topics_as_string
+        description: Array (as string) of 0 to 4 32-byte hex of indexed log arguments.
         data_type: string
         quote: true
 
@@ -589,11 +589,11 @@ models:
         description: Address from which this event originated.
         data_type: string
         quote: true
-      - name: topics
+      - name: topics_as_string
         description: The original indexed topics of the event.
         data_type: string
         quote: true
-      - name: args_string
+      - name: args_as_string
         description: The decoded arguments of the event as a string of the JSON array.
         data_type: string
         quote: true
@@ -635,5 +635,41 @@ models:
         quote: true
       - name: quantity
         description: Quantity of tokens being transferred.
+        data_type: string
+        quote: true
+
+  - name: stg_etl_faulty_decoded_event
+    description: This view is to identify records in decoded events that have faulty topics or args which weren't extracted correctly from logs. This is due to google's extraction-load job.
+    columns:
+      - name: block_hash
+        description: Hash of the block this event was emitted from.
+        data_type: string
+        quote: true
+      - name: transaction_hash
+        description: Hash of the transaction this event was emitted from.
+        data_type: string
+        quote: true
+      - name: log_index
+        description: The event's index position in the block.
+        data_type: int64
+        quote: true
+      - name: address
+        description: Address from which this event originated.
+        data_type: string
+        quote: true
+      - name: event_hash
+        description: Keccak hash of the event signature.
+        data_type: string
+        quote: true
+      - name: event_signature
+        description: Function signature of the event.
+        data_type: string
+        quote: true
+      - name: topics_as_string
+        description: The original indexed topics of the event.
+        data_type: string
+        quote: true
+      - name: args_as_string
+        description: The decoded arguments of the event as a JSON array.
         data_type: string
         quote: true

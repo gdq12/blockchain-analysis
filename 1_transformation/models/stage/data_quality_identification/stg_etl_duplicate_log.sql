@@ -4,7 +4,7 @@ select
   l.block_timestamp,
   l.log_index,
   l.address,
-  l.topics,
+  array_to_spring(l.topics, '') topics_as_string,
   l.data
 from {{ source('ethereum', 'logs') }} l
 group by all 

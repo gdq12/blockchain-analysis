@@ -26,20 +26,33 @@ faulty_de as
     de.transaction_hash, 
     de.log_index, 
     de.address, 
-    de.event_hash, 
-    de.event_signature, 
-    coalesce(to_json_string(de.topics), '0') topics, 
-    coalesce(to_json_string(de.args), '0') args
+    de.event_hash
 from in_log de 
-where (
-    (de.args is null)
-    or 
-    (array_length(de.topics) > 4)
-    or 
-    (de.topics is null)
-    or 
-    (array_length(de.topics) = 0)
-    )
+join {{ ref('stg_etl_faulty_decoded_event') }} fde on de.block_hash = fde.block_hash
+                                                and de.transaction_hash = fde.transaction_hash 
+                                                and de.log_index = fde.log_index 
+                                                and de.address = fde.address  
+                                                and de.event_hash = fde.event_hash 
+                                                and coalesce(to_json_string(de.topics), '0') topics = fde.topics_as_string
+                                                and coalesce(de.args, '0') args = fde.args_as_string
+
+),
+dup_de as 
+(select 
+    de.block_hash, 
+    de.transaction_hash, 
+    de.log_index, 
+    de.address, 
+    de.event_hash
+from in_log de 
+join {{ ref('stg_etl_duplicate_decoded_event') }} dde on de.block_hash  = dde.block_hash 
+                    and de.transaction_hash = dde.transaction_hash 
+                    and de.log_index = dde.log_index 
+                    and de.event_hash = dde.event_hash 
+                    and de.address = dde.address 
+                    and array_to_string(de.topics, '') = dde.topics_as_string
+                    and to_json_string(de.args) = dde.arg_string_as_string
+
 )
 select 
     de.block_hash, 
@@ -55,14 +68,12 @@ select
     de.removed
 from in_log de 
 where not exists in (select 1 
-                    from join {{ ref('stg_etl_duplicate_decoded_event') }} dde 
+                    from join dup_de dde 
                     where de.block_hash  = dde.block_hash 
                     and de.transaction_hash = dde.transaction_hash 
                     and de.log_index = dde.log_index 
                     and de.event_hash = dde.event_hash 
                     and de.address = dde.address 
-                    and array_to_string(de.topics, '') = attay_to_string(dde.topics, '')
-                    and to_json_string(de.args) = dde.arg_string 
                     )
 and not exists in (select 1
                 from faulty_de fde 
@@ -71,6 +82,4 @@ and not exists in (select 1
                 and de.log_index = fde.log_index 
                 and de.address = fde.address  
                 and de.event_hash = fde.event_hash 
-                and coalesce(to_json_string(de.topics), '0') topics = fde.topics
-                and coalesce(de.args, '0') args = fde.args
                 )
