@@ -4,7 +4,7 @@ select
   block_timestamp,
   transaction_hash,
   transaction_index,
-  trace_address,
+  ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(trace_address) ta), '.') trace_address_as_string,
   case 
     when array_length(trace_address) > 10 then 'trace_suspicious_deep_nesting'
     when exists (select x from unnest(trace_address) as x where x < 0) then 'trace_malformed_negative_index'

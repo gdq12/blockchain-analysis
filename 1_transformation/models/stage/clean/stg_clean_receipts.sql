@@ -14,8 +14,8 @@ select
     r.root, 
     r.status
 from {{ source('ethereum', 'receipts') }} r 
-join {{ ref('stg_clean_transactions') }} tr on r.block_hash = tr.block_hash 
-                                            and r.transaction_hash = tr.transaction_hash
-                                            and r.from_address = tr.from_address 
-                                            and r.to_address = tr.from_address
+join {{ ref('stg_clean_transactions') }} trx on r.block_hash = trx.block_hash 
+                                            and r.transaction_hash = trx.transaction_hash
+                                            and r.from_address = trx.from_address 
+                                            and r.to_address = trx.from_address
 where r.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

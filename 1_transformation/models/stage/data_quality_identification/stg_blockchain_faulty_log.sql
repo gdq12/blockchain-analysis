@@ -6,7 +6,7 @@ select
   l.transaction_index,
   l.log_index,
   l.address,
-  l.topics,
+  to_json_string(l.topics) topics_as_string,
   'log_faulty_topic' evaluation_flag
 from {{ source('ethereum', 'logs') }} l
 where l. block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

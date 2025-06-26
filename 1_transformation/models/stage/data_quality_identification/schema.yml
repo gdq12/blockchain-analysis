@@ -339,9 +339,9 @@ models:
         description: The transaction's index position in the block.
         data_type: int64
         quote: true
-      - name: trace_address
+      - name: trace_address_as_string
         description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
-        data_type: int64
+        data_type: string
         quote: true
       - name: evaluation_flag
         description: |-
@@ -384,8 +384,8 @@ models:
         description: Address from which this log originated.
         data_type: string
         quote: true
-      - name: topics
-        description: Array of 0 to 4 32-byte hex of indexed log arguments.
+      - name: topics_as_string
+        description: Array (as string) of 0 to 4 32-byte hex of indexed log arguments.
         data_type: string
         quote: true
       - name: evaluation_flag
@@ -433,8 +433,8 @@ models:
         data_type: string
         quote: true
 
-  - name: stg_blockchain_pre_merge_miner_reward
-    description: This view is to identify miner rewards prior to The Merge (proof-of-work) in the Ethereum blockchain. It is a helper model for `stg_etl_faulty_trace`, to prevent these traces from being mistakenly identified as faulty.
+  - name: stg_blockchain_trace_wo_transaction
+    description: This view is to identify miner rewards prior to The Merge (proof-of-work) and block-level system calls in the Ethereum blockchain. It is a helper model for `stg_etl_faulty_trace`, to prevent these traces from being mistakenly identified as faulty.
     columns:
       - name: block_hash
         description: Hash of the block this trace was created from.
@@ -448,11 +448,19 @@ models:
         description: Unix timestamp when the block was added to the blockchain.
         data_type: timestamp
         quote: true
+      - name: action_from_address
+        description: Address of the sender. Null for "suicide" and "reward" traces.
+        data_type: string
+        quote: true
+      - name: action_to_address
+        description: Address of the receiver. Null for "suicide" and "reward" traces.
+        data_type: string
+        quote: true
       - name: miner_address
         description: Recipient of the block or uncle reward. Available only for "reward" traces.
         data_type: string
         quote: true
-      - name: value_lossless
+      - name: action_value_lossless
         description: Value transferred by this trace in Wei. A decimal number represented in STRING format to preserve full 256-bit numeric precision. Available only for "call" traces.
         data_type: string
         quote: true
@@ -462,6 +470,13 @@ models:
         quote: true
       - name: trace_type
         description: Trace type. One of "create", "suicide", "call" or "reward".
+        data_type: string
+        quote: true
+      - name: evaluation_flag
+        description: |-
+          Abbreviation for record type. This is used when merging with non-anomaly data so it can be more easily identified as such. The possible entries are:
+          * `traces_miner_miner_reward`: when the traces is dated prior to sept15 2022, trace_type is reward and only has an author value.
+          * `token_transfer_unusual_event_type`: when the record doesn't meet the miner reward classification but it still not tied to a transaction_hash.
         data_type: string
         quote: true
 

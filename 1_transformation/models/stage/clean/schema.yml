@@ -353,6 +353,14 @@ models:
         description: A sequence of indices that uniquely identifies this trace within the call tree. Available only for transaction-scoped traces.
         data_type: int64
         quote: true
+      - name: trace_id
+        description: String version of trace_address, it is the unique identifier of the principle trace.
+        data_type: string
+        quote: true
+      - name: trace_depth
+        description: Number of steps in the trace path in trace_address.
+        data_type: int64
+        quote: true
       - name: subtrace_count
         description: Number of subtraces of this trace.
         data_type: int64

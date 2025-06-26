@@ -6,6 +6,8 @@ select
     tr.transaction_index, 
     tr.trace_type, 
     tr.trace_address, 
+    ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(tr.trace_address) ta), '.')  trace_id,
+    array_length(trace_address) trace_depth,
     tr.subtrace_count, 
     tr.action, 
     tr.result, 

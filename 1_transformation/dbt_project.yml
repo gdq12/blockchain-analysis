@@ -26,9 +26,13 @@ models:
         +schema: stage
         +enabled: true  
       clean:
-        +materialized: table
+        +materialized: view
         +schema: stage
         +enabled: true  
+    core:
+      +materialized: table
+      +schema: core
+      +enabled: true  
 
 vars: 
   start_time: "'2022-09-01 17:00:00'"
