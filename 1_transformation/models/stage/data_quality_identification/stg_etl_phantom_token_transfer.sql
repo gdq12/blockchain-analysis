@@ -4,6 +4,7 @@ select
     tk.block_timestamp,
     tk.transaction_hash,
     tk.transaction_index,
+    tk.event_index,
     tk.event_hash,
     tk.address,
     tk.from_address,
@@ -11,8 +12,7 @@ select
     tk.quantity
 from {{ source('ethereum', 'token_transfers') }} tk 
 left join {{ source('ethereum', 'logs') }} l on tk.transaction_hash = l.transaction_hash
-                                            and tk.block_number = l.block_number
-                                            and tk.address = l.address
-                                            and tk.event_hash = l.topics[SAFE_OFFSET(0)]
+                                            and tk.block_hash = l.block_hash
+                                            and tk.event_index = l.log_index
 where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 and l.transaction_hash IS NULL

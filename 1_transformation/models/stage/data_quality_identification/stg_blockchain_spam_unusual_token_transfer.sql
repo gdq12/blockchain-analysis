@@ -5,6 +5,7 @@ select
     transaction_hash,
     transaction_index,
     event_hash,
+    event_index,
     address,
     case 
         when coalesce(quantity, '0') = '0' 

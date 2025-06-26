@@ -5,6 +5,7 @@ select
     tk.transaction_hash,
     tk.transaction_index,
     tk.event_hash,
+    tk.event_index,
     tk.address,
     case 
         when cy.name is null or cy.symbol is null then 'token_transfer_missing_data'
