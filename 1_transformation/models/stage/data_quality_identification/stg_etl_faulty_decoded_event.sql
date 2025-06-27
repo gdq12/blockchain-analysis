@@ -5,8 +5,8 @@ select
     address, 
     event_hash, 
     event_signature, 
-    coalesce(to_json_string(topics), '0') topics_as_string, 
-    coalesce(to_json_string(args), '0') args_as_string
+    MD5(to_json_string(topics)) topics_hash, 
+    MD5(to_json_string(args)) args_hash
 from {{ source('ethereum', 'decoded_events') }}
 where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 and (

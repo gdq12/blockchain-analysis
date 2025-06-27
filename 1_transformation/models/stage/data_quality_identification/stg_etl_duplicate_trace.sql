@@ -4,7 +4,7 @@ select
   block_timestamp,
   transaction_hash,
   transaction_index, 
-  ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(trace_address) ta), '.') trace_id,
+  MD5(ARRAY_TO_STRING(ARRAY(SELECT CAST(ta AS STRING) FROM UNNEST(trace_address) ta), '.')) trace_hash,
   trace_type,
   action.author action_author, 
   action.from_address action_from_address, 

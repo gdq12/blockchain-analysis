@@ -4,8 +4,8 @@ select
   log_index, 
   event_hash,
   address,
-  to_json_string(topics) topics_as_string,
-  to_json_string(args) args_as_string
+  MD5(to_json_string(topics)) topics_hash,
+  MD5(to_json_string(args)) args_hash
 from {{ source('ethereum', 'decoded_events') }}
 where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 group by all 

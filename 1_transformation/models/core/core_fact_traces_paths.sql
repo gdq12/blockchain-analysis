@@ -5,7 +5,7 @@ with t1 as
     block_timestamp,
     transaction_hash,
     transaction_index,
-    trace_hash,
+    trace_id_hash,
     trace_id,
     trace_depth,
     ARRAY_TO_STRING(
@@ -50,7 +50,7 @@ select
   block_timestamp,
   transaction_hash,
   transaction_index,
-  trace_hash,
+  trace_id_hash,
   trace_id,
   trace_depth,
   trace_id_parent,

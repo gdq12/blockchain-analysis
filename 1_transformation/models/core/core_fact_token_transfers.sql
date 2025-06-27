@@ -20,6 +20,7 @@ left join (select
             ) w_eval on tk.block_hash = w_eval.block_hash 
                     and tk.transaction_hash = w_eval.transaction_hash 
                     and tk.event_index = w_eval.event_index
+where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 group by all 
 )
 select 

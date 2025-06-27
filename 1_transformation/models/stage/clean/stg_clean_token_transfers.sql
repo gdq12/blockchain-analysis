@@ -23,6 +23,6 @@ left join {{ ref('stg_etl_duplicate_token_transfer') }} dtk on tk.block_hash = d
 left join {{ ref('stg_etl_phantom_token_transfer') }} ptk on tk.block_hash = ptk.block_hash 
                                                             and tk.transaction_hash = ptk.transaction_hash 
                                                             and tk.event_index = ptk.event_index
-where dtk.block_hash is null 
+where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }} 
+and dtk.block_hash is null 
 and ptk.block_hash is null 
-and tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }} 

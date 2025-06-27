@@ -13,4 +13,5 @@ where l. block_timestamp between {{ var('start_time') }} and {{ var('end_time') 
 and (array_length(l.topics) > 4 
     or l.topics is null 
     or array_length(l.topics) = 0
+    or l.data is null 
     )

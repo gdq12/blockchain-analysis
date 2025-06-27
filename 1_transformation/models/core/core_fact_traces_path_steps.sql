@@ -4,7 +4,7 @@ select
     block_timestamp,
     transaction_hash,
     transaction_index,
-    trace_hash,
+    trace_id_hash,
     trace_id,
     trace_depth,
     evaluation_flags,

@@ -23,3 +23,4 @@ select
     b.withdrawals,
     cast(null as string) evaluation_flags
 from {{ ref('stg_clean_blocks') }} b
+where b.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

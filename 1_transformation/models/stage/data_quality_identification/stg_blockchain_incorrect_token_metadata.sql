@@ -14,7 +14,7 @@ select
         end evaluation_flag
 from {{ source('ethereum', 'token_transfers')}} tk 
 join {{ source('crypto_ethereum', 'tokens') }} cy on lower(tk.address) = lower(cy.address)
-                                        and tk.block_hash = cy.block_hash
+                                                and tk.block_hash = cy.block_hash
 where tk.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}
 and (
     (cy.name is null or cy.symbol is null)
