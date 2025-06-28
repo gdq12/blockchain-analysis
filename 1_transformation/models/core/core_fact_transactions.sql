@@ -21,7 +21,8 @@ select
     trx.s, 
     trx.v, 
     trx.y_parity,
-    array_agg(evaluation_flag IGNORE NULLS) evaluation_flags
+    array_agg(evaluation_flag IGNORE NULLS) evaluation_flags,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('stg_clean_transactions') }} trx
 left join (select 
                 trx.block_hash, trx.transaction_hash, trx.transaction_index, dtrx.evaluation_flag

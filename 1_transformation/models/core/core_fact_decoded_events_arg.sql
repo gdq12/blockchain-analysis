@@ -11,7 +11,8 @@ select
     evaluation_flags,
     ofe event_signature_index,
     e arg_label,
-    regexp_replace(a, '[^a-zA-Z0-9]', '') arg_value
+    regexp_replace(a, '[^a-zA-Z0-9]', '') arg_value,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('core_fact_decoded_events') }},
 unnest(split(regexp_replace(event_signature, '[a-zA-Z].*\\(|\\)', ''))) e with offset ofe
 join unnest(split(to_json_string(args))) a with offset ofa on ofe = ofa

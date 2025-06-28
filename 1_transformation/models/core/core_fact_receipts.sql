@@ -13,7 +13,8 @@ select
     r.logs_bloom, 
     r.root, 
     r.status,
-    array_agg(sr.evaluation_flag IGNORE NULLS) evaluation_flags
+    array_agg(sr.evaluation_flag IGNORE NULLS) evaluation_flags,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('stg_clean_receipts') }} r 
 left join {{ ref('stg_blockchain_failed_suspicious_receipt') }} sr on r.block_hash = sr.block_hash 
                                                                 and r.transaction_hash = sr.transaction_hash 

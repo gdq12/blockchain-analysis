@@ -21,6 +21,7 @@ select
     b.logs_bloom, 
     b.withdrawals_root, 
     b.withdrawals,
-    cast(null as string) evaluation_flags
+    cast(null as string) evaluation_flags,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('stg_clean_blocks') }} b
 where b.block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

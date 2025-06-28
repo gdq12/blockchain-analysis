@@ -10,7 +10,8 @@ select
     event_signature,
     evaluation_flags,
     oft topic_index, 
-    t topics
+    t topics,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('core_fact_decoded_events') }}
 cross join UNNEST(topics) t with offset oft
 where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

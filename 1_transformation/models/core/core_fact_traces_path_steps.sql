@@ -9,7 +9,8 @@ select
     trace_depth,
     evaluation_flags,
     ofta traces_level,
-    ta trace_step
+    ta trace_step,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('core_fact_traces') }}
 left join UNNEST(trace_address) ta with offset ofta
 where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

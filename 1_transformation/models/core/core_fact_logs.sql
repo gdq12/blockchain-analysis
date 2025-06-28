@@ -31,5 +31,6 @@ select
     data, 
     topics, 
     removed,
-    evaluation_flags
+    evaluation_flags,
+    {{ dbt.current_timestamp() }} transformation_dt
 from t1

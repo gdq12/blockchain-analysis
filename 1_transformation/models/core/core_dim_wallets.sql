@@ -34,6 +34,7 @@ select
   wa.trx_received_count,
   wa.trx_count_overall,
   wa.trx_eth_sent,
-  wa.trx_eth_received
+  wa.trx_eth_received,
+  {{ dbt.current_timestamp() }} transformation_dt
 from wallet_activity wa 
 left join cntr on wa.address = cntr.contract_address 

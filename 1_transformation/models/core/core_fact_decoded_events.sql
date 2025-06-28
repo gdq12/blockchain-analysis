@@ -12,6 +12,7 @@ select
     topics, 
     args, 
     removed,
-    cast(null as string) evaluation_flags
+    cast(null as string) evaluation_flags,
+    {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('stg_clean_decoded_events') }}
 where block_timestamp between {{ var('start_time') }} and {{ var('end_time') }}

@@ -73,5 +73,6 @@ select
   gas_used,
   output,
   result_address,
-  result_code
+  result_code,
+  {{ dbt.current_timestamp() }} transformation_dt
 from t1 

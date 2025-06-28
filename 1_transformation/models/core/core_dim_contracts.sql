@@ -15,7 +15,8 @@ select
     when tk.block_hash is not null and tk.from_address != '0x0000000000000000000000000000000000000000'
       then 'OTHER_CONTRACT'
       else 'SMART_CONTRACT' end contract_type,
-  tk.event_type token_standard
+  tk.event_type token_standard,
+  {{ dbt.current_timestamp() }} transformation_dt
 from {{ ref('core_fact_transactions') }} trx
 join {{ ref('core_fact_traces') }} tr on trx.block_hash = tr.block_hash 
                                     and trx.transaction_hash = tr.transaction_hash 
