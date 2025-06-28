@@ -2,29 +2,29 @@
 
 with base_trnfs as 
 (select 
-  address token_address,
-  from_address wallet_address,
-  block_timestamp,
-  block_number,
-  -cast(quantity as bignumeric) balance
+    address token_address,
+    from_address wallet_address,
+    block_timestamp,
+    block_number,
+    -cast(quantity as bignumeric) balance
 from {{ ref('core_fact_toekn_transfers') }}
 union all 
 select 
-  address token_address,
-  to_address wallet_address,
-  block_timestamp, 
-  block_number,
-  cast(quantity as bignumeric) balance
+    address token_address,
+    to_address wallet_address,
+    block_timestamp, 
+    block_number,
+    cast(quantity as bignumeric) balance
 from {{ ref('core_fact_toekn_transfers') }}
 ),
 snap_shots as 
 (select 
-  token_address,
-  wallet_address,
-  date_trunc(block_timestamp, {{ snapshot_granularity | upper }} ) snapshot_date,
-  min(block_number) first_blck_num, 
-  max(block_number) last_blck_num,
-  sum(balance) balance
+    token_address,
+    wallet_address,
+    date_trunc(block_timestamp, {{ snapshot_granularity | upper }} ) snapshot_date,
+    min(block_number) first_blck_num, 
+    max(block_number) last_blck_num,
+    sum(balance) balance
 from base_trnfs
 group by all 
 )
